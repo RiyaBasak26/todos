@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <input class="showname" type="text" @change="onchange" v-model="val">
+      <input class="showname" type="text" @blur="onchange" v-model="val">
       <button class="addname">Add</button>
     </div>
     <div>
@@ -29,19 +29,27 @@
 </template>
 
 <script>
-import { ref, onMounted, axios } from "vue";
+import axios from 'axios';
+import { ref, onMounted } from "vue";
 export default {
   setup() {
-    const result = ref(null);
-    const val = ref("");
+    const result = ref({
+      user:[]
+    });
+    const val = ref([]);
     onMounted(async () => {
-      result.value = await axios.get('https://jsonplaceholder.typicode.com/users');
+
+      const res = await axios.get('https://jsonplaceholder.typicode.com/users');
+      result.value.user= res.data;
+    console.log("hiii", result.value.user)
 
     })
-    //  onchange(async()=>{
-    //   console.log("hiii",val.value)
-    //   result.value = await axios.get('https://jsonplaceholder.typicode.com/users');
-    //  })
+     const onchange=(e)=>{
+      
+      let data=result.value.user.filter(x=>x.name.toLowerCase().includes(e.target.value.toLowerCase()))
+       console.log("hii22222",data)
+         
+     }
 
     return {
       result,
